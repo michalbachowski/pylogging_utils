@@ -90,12 +90,6 @@ class Sentinel(object):
 
         return not self._reraise
 
-def _nvl(val1, val2):
-    """ Returns first non-None value """
-    if val1 is not None:
-        return val1
-    return val2
-
 class SentinelBuilder(object):
     """ Builds instances of Sentinel class with predefined parameters """
 
@@ -125,8 +119,8 @@ class SentinelBuilder(object):
                  log_success=None):
         """ Creates Sentinel instances. Allows to override some of the
         predefined parameters """
-        return self.SENTINEL_CLASS(_nvl(logger, self._logger), message,
-                        _nvl(reraise, self._reraise),
-                        _nvl(with_traceback, self._with_traceback),
-                        _nvl(log_success, self._log_success))
+        return self.SENTINEL_CLASS(logger or self._logger, message,
+                        reraise or self._reraise,
+                        with_traceback or self._with_traceback,
+                        log_success or self._log_success)
 
