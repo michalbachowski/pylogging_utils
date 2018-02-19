@@ -16,7 +16,7 @@ def read(fname):
     return codecs.open(
         os.path.join(os.path.dirname(__file__), fname), 'r', 'utf-8').read()
 
-readme = read('README.rst')
+readme = read('README.md')
 
 setup(
     name='logging_utils',
@@ -34,7 +34,7 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Topic :: System :: Logging',
         "Programming Language :: Python :: 2",
