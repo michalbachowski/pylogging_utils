@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Module providing compatibility layer with build-in logging module """
 import logging
-from . import LoggerContextual
-from .stack import ContextStack
+from .context import LoggerContextual
+from .context.stack import ContextStack
 
 DEFAULT_CONTEXT_STACK = ContextStack()
 
@@ -11,3 +11,4 @@ def getLogger(*args, **kwargs):
         DEFAULT_CONTEXT_STACK,
         logging.getLogger(*args, **kwargs)
     )
+

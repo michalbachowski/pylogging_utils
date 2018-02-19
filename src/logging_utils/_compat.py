@@ -13,16 +13,25 @@ if not is_py2:
 
     # lazy iterators
     map = map
-    iteritems = operator.methodcaller(b'items')
-
-    from unittest import mock
+    iteritems = operator.methodcaller('items')
 else:
     # Python 2
 
     # lazy iterators
     from itertools import imap
     map = imap
-    iteritems = operator.methodcaller(b'iteritems')
+    iteritems = operator.methodcaller('iteritems')
 
-    import mock
+# try to import "mock" (built-in Py3, external module in Py2)
+try:
+    from unittest import mock as _mock
+    mock = _mock
+except ImportError:
+# mock is required only for tests - it might not be available for regular use
+    try:
+        import mock
+    except ImportError:
+        pass
+
+__all__ = ['map', 'iteritems', 'mock']
 

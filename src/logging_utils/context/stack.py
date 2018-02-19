@@ -3,13 +3,14 @@
 from __future__ import absolute_import
 
 from itertools import chain
+from collections import OrderedDict
 from .._compat import iteritems, map
 
 class ContextStack(object):
 
     def __init__(self):
         self._stack = []
-        self._dict_cache = {}
+        self._dict_cache = OrderedDict()
         self._str_cache = None
         self._format_context_arg = lambda tpl: "{0}={1}".format(tpl[0], tpl[1])
 
