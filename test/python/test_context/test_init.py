@@ -38,12 +38,12 @@ class LoggerContextualTest(unittest.TestCase):
         self.assertEqual(0, self.stack.pop.call_count)
 
         with self.logger.context(foo=1):
-            self.stack.push.assert_called_once_with(IsA(OrderedDict))
+            self.stack.push.assert_called_once_with(IsA(dict))
             self.assertEqual(0, self.stack.pop.call_count)
 
             self.assertEqual('message; stack_return',
                              self.logger.process('message', {})[0])
 
-        self.stack.push.assert_called_once_with(IsA(OrderedDict))
+        self.stack.push.assert_called_once_with(IsA(dict))
         self.stack.pop.assert_called_once_with()
 
