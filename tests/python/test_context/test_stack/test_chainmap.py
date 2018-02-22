@@ -3,52 +3,87 @@ import unittest
 
 AVAILABLE = True
 try:
-    from logging_utils.context.stack.chainmap import ContextStack
+    from logging_utils.context.stack.chainmap import ChainMapContextStack
 except:
     AVAILABLE = False
 
 
-@unittest.skipUnless(AVAILABLE, "ChainMap-backed ContextStack is unavailable")
-class ContextStackTest(unittest.TestCase):
+@unittest.skipUnless(AVAILABLE, "ChainMap-backed ContextStack is unavailable for this Python")
+class SimpleContextStackTest(unittest.TestCase):
 
     def setUp(self):
-        self.stack = ContextStack()
+        self.stack = ChainMapContextStack()
 
-    def test_pop_from_empty_stack_does_not_raise_IndexError(self):
-        self.stack.pop()
+    def test_pop_from_empty_stack_raises_IndexError(self):
+        self.assertRaises(IndexError, self.stack.pop)
 
-    def test_push_does_not_care_about_value_types(self):
+    def test_push_expects_allows_any_value(self):
         self.stack.push(None)
+        self.stack.push(True)
         self.stack.push(1)
         self.stack.push([1,2,3])
 
-    def test_to_str_complains_about_incorrect_value_type(self):
+    def test_iter_expects_values_to_be_dicts_1(self):
         self.stack.push(None)
-        self.assertRaises(TypeError, str, self.stack)
+        self.assertRaises(AttributeError, list, self.stack)
 
-    def test_stack_might_be_casted_to_string(self):
-        self.assertEqual('', str(self.stack))
+    def test_iter_expects_values_to_be_dicts_2(self):
+        self.stack.push(True)
+        self.assertRaises(AttributeError, list, self.stack)
+
+    def test_iter_expects_values_to_be_dicts_3(self):
+        self.stack.push(1)
+        self.assertRaises(AttributeError, list, self.stack)
+
+    def test_iter_expects_values_to_be_dicts_4(self):
+        self.stack.push([1,2,3])
+        self.assertRaises(AttributeError, list, self.stack)
+
+    def test_pop_removes_element_from_stack(self):
+        self.assertEqual(list(self.stack), list())
+        self.stack.push(None)
+
+        self.stack.pop()
+        self.assertEqual(list(self.stack), list())
+
+    def test_push_adds_element_to_the_stack(self):
+        self.assertEqual('[]', str(self.stack))
 
         self.stack.push({'a': 1})
-        self.assertEqual('a=1', str(self.stack))
+        self.assertEqual("[{'a': 1}]", str(self.stack))
 
         self.stack.push({'b': 2})
-        self.assertEqual('a=1; b=2', str(self.stack))
+        self.assertEqual("[{'a': 1}, {'b': 2}]", str(self.stack))
 
-        self.stack.pop()
-        self.assertEqual('a=1', str(self.stack))
+    def test_iter_returns_iterable(self):
+        self.stack.push(dict(a=1))
+        items = iter(self.stack)
+        self.assertEquals(list(items), [('a', 1)])
 
-        self.stack.pop()
-        self.assertEqual('', str(self.stack))
+        [i for i in items]
+        self.assertEquals(list(items), list())
 
-    def test_new_context_overrides_existing_values(self):
+        items = iter(self.stack)
+        self.assertEquals(list(items), [('a', 1)])
+
+        self.assertEquals(list(self.stack), [('a', 1)])
+
+    def test_stack_might_be_casted_to_string(self):
+        self.assertEqual('[]', str(self.stack))
 
         self.stack.push({'a': 1})
-        self.assertEqual('a=1', str(self.stack))
+        self.assertEqual("[{'a': 1}]", str(self.stack))
+
+        self.stack.push({'b': 2})
+        self.assertEqual("[{'a': 1}, {'b': 2}]", str(self.stack))
+
+    def test_new_context_overrides_existing_values(self):
+        self.stack.push({'a': 1})
+        self.assertEqual([('a', 1)], list(self.stack))
 
         self.stack.push({'a': 2})
-        self.assertEqual('a=2', str(self.stack))
+        self.assertEqual([('a', 2)], list(self.stack))
 
         self.stack.pop()
-        self.assertEqual('a=1', str(self.stack))
+        self.assertEqual([('a', 1)], list(self.stack))
 
