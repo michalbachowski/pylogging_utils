@@ -1,12 +1,12 @@
 PYTHONEXE=python -B
-TEST_ENV = local
 # DO NOT rename it to PYTHONPATH as it will lead to weird issues!
 PYTHON_INCLUDEPATH=../:$(PYTHONPATH)
 PYTESTARGS=
 # Once there will be more tests we might enable parallelism
 #PYTESTARGS=-n 4
 
-PYTHONTESTS=--ignore ./python/fixtures/ python/
+PYTHONTESTS=python/
+COVARGS=--cov=logging_utils --cov-report=term-missing
 
 all: test
 
@@ -16,6 +16,6 @@ unit: python
 
 
 python:
-	TEST_FIXTURES=$(shell pwd)/python/fixtures TEST_ENV=$(TEST_ENV) PYTHONPATH=$(PYTHON_INCLUDEPATH) $(PYTHONEXE) -mpytest --cov=logging_utils $(PYTESTARGS) $(PYTHONTESTS) 
+	PYTHONPATH=$(PYTHON_INCLUDEPATH) $(PYTHONEXE) -mpytest ${COVARGS} $(PYTESTARGS) $(PYTHONTESTS) 
 
 .PHONY: all unit python

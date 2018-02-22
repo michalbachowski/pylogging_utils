@@ -4,7 +4,7 @@ import logging
 from contextlib import contextmanager
 
 
-class LoggerContextual(logging.LoggerAdapter):
+class LoggerAdapterWithContext(logging.LoggerAdapter):
     """ Logger subclass that allows to define context.
     IT IS NEITHER THREAD NOR ASYNC SAFE
     """
@@ -20,7 +20,7 @@ class LoggerContextual(logging.LoggerAdapter):
         :rtype: logging_utils.context.LoggerContextual
         """
         self._stack = stack
-        logging.LoggerAdapter.__init__(self, logger, None)
+        return super(LoggerAdapterWithContext, self).__init__(logger, None)
 
     @contextmanager
     def context(self, **kwargs):
@@ -45,6 +45,6 @@ class LoggerContextual(logging.LoggerAdapter):
         :returns: tuple containing pre-processed msg and kwargs
         :rtype: tuple
         """
-        return super(LoggerContextual, self).process(
+        return super(LoggerAdapterWithContext, self).process(
             '; '.join([msg, str(self._stack)]), kwargs)
 

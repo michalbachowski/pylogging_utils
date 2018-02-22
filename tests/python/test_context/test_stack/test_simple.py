@@ -1,9 +1,7 @@
 # encoding: utf-8
-from __future__ import absolute_import
-
 import unittest
 
-from logging_utils.context.stack import ContextStack
+from logging_utils.context.stack.simple import ContextStack
 
 
 class ContextStackTest(unittest.TestCase):
