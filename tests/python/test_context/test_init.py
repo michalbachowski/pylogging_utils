@@ -14,11 +14,14 @@ class GetLoggerWithContextTest(unittest.TestCase):
     def setUp(self):
         self.inner_logger = mock.MagicMock(spec=logging.Logger)
         self.inner_logger._log = mock.MagicMock()
-        def _copy_to_log(msg, *args, **kwargs):
+        def _handle_info(msg, *args, **kwargs):
             self.inner_logger._log(logging.INFO, msg, args, **kwargs)
+        def _handle_log(level, msg, *args, **kwargs):
+            self.inner_logger._log(level, msg, args, **kwargs)
         # in Python2.7 LoggingAdepter calls inner_logger.info which in turns calls inner_logger._log
         # in Python 3+ LoggingAdapter calls inner_logger._log directly
-        self.inner_logger.info = mock.MagicMock(side_effect=_copy_to_log)
+        self.inner_logger.info = mock.MagicMock(side_effect=_handle_info)
+        self.inner_logger.log = mock.MagicMock(side_effect=_handle_log)
         self.inner_logger.manager = mock.MagicMock()
         self.inner_logger.manager.disable = 0
         self.inner_logger.getEffectiveLevel = mock.MagicMock(return_value=0)

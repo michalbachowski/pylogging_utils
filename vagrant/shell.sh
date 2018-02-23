@@ -13,7 +13,9 @@ if [ -x $(which apt-get) ]; then
         software-properties-common \
         python3.1 python3.1-minimal \
         python3.3 python3.3-minimal \
-        python3.5 python3.5-minimal
+        python3.4 python3.4-minimal \
+        python3.5 python3.5-minimal \
+        python3.6 python3.6-minimal
 fi
 
 # install python packages
