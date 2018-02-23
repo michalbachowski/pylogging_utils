@@ -15,8 +15,8 @@ class SortedContextStack(object):
         self._stack.pop()
         return self
 
-    def get_items(self):
-        return sorted(self._stack.get_items(), key=itemgetter(0))
+    def __iter__(self):
+        return iter(sorted(self._stack, key=itemgetter(0)))
 
     def __str__(self):
         return str(self._stack)

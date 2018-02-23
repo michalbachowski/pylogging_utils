@@ -16,7 +16,7 @@ class ChainMapContextStack(object):
         self._stack = self._stack.parents
         return self
 
-    def get_items(self):
+    def __iter__(self):
         return iteritems(self._stack)
 
     def __str__(self):
