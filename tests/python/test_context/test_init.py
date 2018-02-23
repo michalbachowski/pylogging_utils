@@ -13,7 +13,15 @@ class GetLoggerWithContextTest(unittest.TestCase):
 
     def setUp(self):
         self.inner_logger = mock.MagicMock(spec=logging.Logger)
-        self.inner_logger.info = mock.MagicMock()
+        self.inner_logger._log = mock.MagicMock()
+        def _copy_to_log(msg, *args, **kwargs):
+            self.inner_logger._log(logging.INFO, msg, args, **kwargs)
+        # in Python2.7 LoggingAdepter calls inner_logger.info which in turns calls inner_logger._log
+        # in Python 3+ LoggingAdapter calls inner_logger._log directly
+        self.inner_logger.info = mock.MagicMock(side_effect=_copy_to_log)
+        self.inner_logger.manager = mock.MagicMock()
+        self.inner_logger.manager.disable = 0
+        self.inner_logger.getEffectiveLevel = mock.MagicMock(return_value=0)
 
         self.logger = getLoggerWithContext()
         self.logger.logger = self.inner_logger
@@ -30,10 +38,10 @@ class GetLoggerWithContextTest(unittest.TestCase):
                         self.logger.info("bar")
                 self.logger.info("baz")
 
-        self.inner_logger.info.assert_has_calls([
-            mock.call("foo; [a]=[1]; [b]=[2]; [c]=[3]", extra=None),
-            mock.call("bar; [a]=[11]; [b]=[2]; [c]=[3]", extra=None),
-            mock.call("baz; [a]=[1]; [c]=[3]", extra=None)
+        self.inner_logger._log.assert_has_calls([
+            mock.call(logging.INFO, "foo; [a]=[1]; [b]=[2]; [c]=[3]", (), extra=None),
+            mock.call(logging.INFO, "bar; [a]=[11]; [b]=[2]; [c]=[3]", (), extra=None),
+            mock.call(logging.INFO, "baz; [a]=[1]; [c]=[3]", (), extra=None)
         ])
 
 
