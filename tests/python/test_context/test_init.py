@@ -45,8 +45,8 @@ class BuildFormattedAndSortedContextStackTest(unittest.TestCase):
     def test_log_messages_contain_formatted_and_sorted_context_args(self):
         self.stack.push(dict(a=1))
         self.stack.push(dict(c=3))
-        self.stack.push(dict(b=2))
-        self.stack.push(dict(a=11))
+        self.stack.push(dict(b=2, d=4))
+        self.stack.push(dict(d=14, a=11))
 
-        self.assertEqual(str(self.stack), "[a]=[1]; [b]=[2]; [c]=[3]")
+        self.assertEqual(str(self.stack), "[a]=[11]; [b]=[2]; [c]=[3]; [d]=[14]")
 
