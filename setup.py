@@ -26,7 +26,7 @@ setup(
     author = 'Michał Bachowski',
     author_email = 'michalbachowski@gmail.com',
     url = 'https://github.com/michalbachowski/pylogging_utils',
-    packages = ['logging_utils', 'logging_utils.context'],
+    packages = ['logging_utils', 'logging_utils.context', 'logging_utils.context.stack'],
     license = "MIT",
     package_dir = {'logging_utils': 'logging_utils'},
     install_requires = [],
