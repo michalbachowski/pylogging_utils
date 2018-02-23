@@ -17,7 +17,7 @@ class SimpleContextStack(object):
         return self
 
     def __iter__(self):
-        return iteritems(dict(chain.from_iterable(map(iteritems, self._stack))))
+        return iter(iteritems(dict(chain.from_iterable(map(iteritems, self._stack)))))
 
     def __str__(self):
         return str(self._stack)
